@@ -37,8 +37,8 @@ for card in selector_accueil.css('div.loop-card'): # boucle pour chaque carte d'
     response_article = requests.get(lien, headers=headers)
     selector_article = Selector(response_article.text)
 
-    summary_article = selector_article.css('p#speakable-summary.wp-block-paragraph').get()
-    text_article = selector_article.css('p.wp-block-paragraph').getall()
+    summary_article = selector_article.css('p#speakable-summary.wp-block-paragraph::text').getall()
+    #text_article = selector_article.css('p.wp-block-paragraph').getall()
 
 
 
@@ -52,15 +52,17 @@ for card in selector_accueil.css('div.loop-card'): # boucle pour chaque carte d'
         'Auteur': auteur,
         'Date_relative': date_relative,
         'Date_absolue': date_absolue,
-        'Summary_article': summary_article,
-        'Text_article': text_article
+        'Summary_article': summary_article
+        #'Text_article': text_article
     })
 
 
 
+
 # Afficher les articles récupérés avec le texte
-for article in articles:
-    ic(article)
+#for article in articles:
+#afficher qu'une carte d'article
+ic(articles[0])
 
 
 
