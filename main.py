@@ -4,11 +4,11 @@ from icecream import ic
 import json
 import time
 
+
 # Ajouter un User-Agent pour éviter d'être bloqué
 headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
 }
-
 
 
 
@@ -29,7 +29,7 @@ for card in selector_accueil.css('div.loop-card'): # boucle pour chaque carte d'
     date_relative = card.css('time.loop-card__time::text').get()
     date_absolue = card.css('time.loop-card__time::attr(datetime)').get()
 
-
+#Ajouter un délai de 2 secondes entre chaque requête pour éviter de surcharger le serveur
     time.sleep(2)
 
 
@@ -37,8 +37,8 @@ for card in selector_accueil.css('div.loop-card'): # boucle pour chaque carte d'
     response_article = requests.get(lien, headers=headers)
     selector_article = Selector(response_article.text)
 
-    summary_article = selector_article.css('p#speakable-summary.wp-block-paragraph::text').getall()
-    #text_article = selector_article.css('p.wp-block-paragraph').getall()
+    summary_article =selector_article.css('p#speakable-summary.wp-block-paragraph::text').getall() #sommaire de l'article
+    text_article = selector_article.css('p.wp-block-paragraph::text').get()
 
 
 
@@ -52,8 +52,8 @@ for card in selector_accueil.css('div.loop-card'): # boucle pour chaque carte d'
         'Auteur': auteur,
         'Date_relative': date_relative,
         'Date_absolue': date_absolue,
-        'Summary_article': summary_article
-        #'Text_article': text_article
+        'Summary_article': summary_article,
+        'Text_article': text_article
     })
 
 
@@ -71,4 +71,4 @@ ic(articles[0])
 
 # Écrire dans un fichier JSON
 with open("profil.json", "w", encoding="utf-8") as fichier: # le fichier est ouvert en mode écriture ("w")
-    json.dump(articles, fichier, indent=4) # les données sont écrites dans le fichier en format JSON, avec une indentation de 4 espaces pour une meilleure lisibilité.
+    json.dump(articles[0], fichier, ensure_ascii=False, indent=4) # les données sont écrites dans le fichier en format JSON, avec une indentation de 4 espaces pour une meilleure lisibilité et ensure_ascii=False pour garantir que les caractères non-ASCII sont encodés correctement.
