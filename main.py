@@ -34,6 +34,8 @@ for card in selector_accueil.css('div.loop-card'): # boucle pour chaque carte d'
     titre = card.css('a.loop-card__title-link::text').get()
     auteur = card.css('a.loop-card__author::text').get() or card.css('a.loop-card__author:text').get()
     date_relative = card.css('time.loop-card__time::text').get()
+    if date_relative:
+        date_relative = date_relative.replace('\n\t', '') #supprimer les sauts de ligne et les espaces en début et fin de chaine de caractère
     date_absolue = card.css('time.loop-card__time::attr(datetime)').get()
 
 #Ajouter un délai de 2 secondes entre chaque requête pour éviter de surcharger le serveur
