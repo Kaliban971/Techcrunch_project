@@ -1,25 +1,33 @@
+--Sqlite3 schema for the project
+
+
 -- Table Categories
 CREATE TABLE categories (
-    category_id INT PRIMARY KEY, AUTO_INCREMENT,
-    category_name VARCHAR(100) NOT NULL,
-    category_url VARCHAR(255) NOT NULL,
-    UNIQUE KEY (category_name)
+    category_id INTEGER PRIMARY KEY, AUTOINCREMENT,
+    category_name TEXT NOT NULL,
+    category_url TEXT NOT NULL,
+    UNIQUE (category_name)
 );
 
 -- Table Authors
 CREATE TABLE authors (
-    author_id INT PRIMARY KEY AUTO_INCREMENT,
-    author_name VARCHAR(100) NOT NULL,
-    UNIQUE KEY (author_name)
+    author_id INT PRIMARY KEY AUTOINCREMENT,
+    author_name TEXT NOT NULL,
+    UNIQUE (author_name)
 );
 
 -- Table Articles
 CREATE TABLE articles (
-    article_id INT PRIMARY KEY AUTO_INCREMENT,
-    titre VARCHAR(255) NOT NULL,
-    url_article VARCHAR(255) NOT NULL,
-    date_relative VARCHAR(50),
-    date_absolute  DATETIME,
-    author_id INT,
-    category_id INT,
-);
+    article_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    titre TEXT NOT NULL,
+    url_article TEXT NOT NULL UNIQUE, -- Ajout de la colonne url_article et verifier que les url sont unique
+    date_relative TEXT,
+    date_absolute  DATETIME, -- Ajout de la colonne date_absolute stocker la date de publication de l'article
+    author_id INTEGER,
+    category_id INTEGER,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Enregistre automatiquement quand l'article a été ajouté à la base,  DEFAULT CURRENT_TIMESTAMP = utilise l'heure actuelle par défaut
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, --Se met à jour automatiquement chaque fois que l'article est modifié
+    FOREIGN KEY (author_id) REFERENCES authors(author_id),
+    FOREIGN KEY (category_id) REFERENCES categories(category_id)
+    );
+
