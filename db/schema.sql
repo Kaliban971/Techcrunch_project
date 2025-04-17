@@ -3,7 +3,7 @@
 
 -- Table Categories
 CREATE TABLE categories (
-    category_id INTEGER PRIMARY KEY, AUTOINCREMENT,
+    category_id INTEGER PRIMARY KEY AUTOINCREMENT,
     category_name TEXT NOT NULL,
     category_url TEXT NOT NULL,
     UNIQUE (category_name)
@@ -11,7 +11,7 @@ CREATE TABLE categories (
 
 -- Table Authors
 CREATE TABLE authors (
-    author_id INT PRIMARY KEY AUTOINCREMENT,
+    author_id INTEGER PRIMARY KEY AUTOINCREMENT,
     author_name TEXT NOT NULL,
     UNIQUE (author_name)
 );

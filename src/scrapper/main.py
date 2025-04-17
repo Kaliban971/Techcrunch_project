@@ -37,6 +37,8 @@ def scrape_techcrunch(output_file = "profil.json"):
         if date_relative:
             date_relative = date_relative.replace('\n\t', '') #supprimer les sauts de ligne et les espaces en début et fin de chaine de caractère
         date_absolue = card.css('time.loop-card__time::attr(datetime)').get()
+        if date_absolue :
+            date_absolue = date_absolue[:10]
 
 #Ajouter un délai de 2 secondes entre chaque requête pour éviter de surcharger le serveur
         time.sleep(2)
@@ -76,8 +78,3 @@ if __name__ == "__main__":
 
     # Afficher le premier article récupéré
     ic(articles[0])
-
-#TODO:Voir comment faire pour gerer la pagination et récupérer les articles de toutes les pages
-#FIXME
-#NOTE
-#HACK

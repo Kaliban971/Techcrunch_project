@@ -1,7 +1,7 @@
 from airflow import DAG
-from airflow.operators.python_operator import PythonOperator
+from airflow.operators.python import PythonOperator
 from datetime import datetime, timedelta
-from main import scrape_techcrunch
+from src.scrapper.main import scrape_techcrunch
 
 # Définir les arguments par défaut pour le DAG
 default_arg = {
@@ -19,14 +19,14 @@ dag = DAG(
     'techcrunch_scraper',
     default_args=default_arg,
     description='Scrape les derniers articles de Techcrunch',
-    schedule_interval=timedelta(days=1), #Executer tous les jours
+    schedule=timedelta(days=1), #Executer tous les jours
 )
 
 # Définir la tâche de scraping
 scrape_task = PythonOperator(
     task_id='scrape_techcrunch_articles',
     python_callable=scrape_techcrunch,
-    op_kwargs={'output_file':'/tmp/techcrunch_articles.json'},
+    op_kwargs={'output_file':'/opt/airflow/dags/techcrunch_articles.json'},
     dag=dag,
 )
 
