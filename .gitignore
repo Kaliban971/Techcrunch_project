@@ -1,0 +1,60 @@
+# Fichiers système 🖥️
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Python 🐍
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+.hypothesis/
+
+# Environnements virtuels 🏝️
+venv/
+env/
+ENV/
+.env
+.venv
+
+# Airflow ✈️
+.airflow/logs/
+airflow/logs/
+logs/
+*.log
+airflow-webserver.pid
+airflow-scheduler.pid
+webserver_config.py
+
+# Docker 🐳
+.docker/env
+docker-compose.override.yml
+
+# Bases de données 💾
+*.db
+*.sqlite
+*.sqlite3
+
+# Fichiers IDE 🧠
+.idea/
+.vscode/
+*.swp
+*.swo
+.project
+.pydevproject
+.settings/
+
+# Distribution / packaging 📦
+dist/
+build/
+*.egg-info/
+
+# Fichiers temporaires 🕒
+.tmp/
+tmp/
+temp/
+.docker/env

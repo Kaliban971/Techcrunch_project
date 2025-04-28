@@ -1,9 +1,17 @@
-import re
 from airflow import DAG
 from airflow.operators.python import PythonOperator
 from datetime import datetime, timedelta
+import sys
+import os
+# Importer les modules avec les chemins corrects
 from src.scrapper.main import scrape_techcrunch
-from src.db.database import init_db, insert_article
+from db.database import init_db, insert_article
+
+# Ajouter le chemin du projet au PYTHONPATH pour trouver les modules
+# Utiliser une variable d'environnement pour le chemin de base
+BASE_DIR = os.environ.get('PROJECT_HOME', '/opt/airflow')
+sys.path.append(BASE_DIR)
+
 
 
 # Définir les arguments par défaut pour le DAG
@@ -17,6 +25,9 @@ default_arg = {
     'retry_delay': timedelta(minutes=4),
 }
 
+# Définir le chemin de la base de données
+DB_PATH = os.path.join(BASE_DIR, "dags", "techcrunch.db")
+
 # Créer le DAG
 dag = DAG(
     'techcrunch_scraper',
@@ -27,15 +38,24 @@ dag = DAG(
 
 # Fonction pour initialiser la base de données
 def init_database():
-    init_db("/opt/airflow/dags/techcrunch.db")
+    """
+    Initialise la base de données SQLite avec le schéma défini.
+    """
+    init_db(DB_PATH)
+    return "Base de données initialisée"
 
-
-def scrape_and_store_article():
+# Fonction pour scraper et stocker les articles
+def scrape_and_store_articles():
+    """
+    Scrape les articles de TechCrunch et les stocke dans la base de données.
+    Retourne le nombre d'articles traités.
+    """
     articles = scrape_techcrunch()
-    for articles in articles:
-        insert_article(articles, "/opt/airflow/dags/techcrunch.db")
-    return len(articles)
-
+    count = 0
+    for article in articles:  # Correction: variable articles au singulier dans la boucle
+        insert_article(article, DB_PATH)
+        count += 1
+    return f"{count} articles traités"
 
 # Définir la tâche d'initialisation de la base de données
 init_db_task = PythonOperator(
@@ -44,21 +64,12 @@ init_db_task = PythonOperator(
     dag=dag,
 )
 
-
-
 # Définir la tâche de scraping et stockage
 scrape_task = PythonOperator(
     task_id='scrape_techcrunch_articles',
-    python_callable=scrape_techcrunch,
+    python_callable=scrape_and_store_articles,  # Utiliser la fonction correcte
     dag=dag,
 )
 
-# definir l'ordre des tâches
+# Définir l'ordre des tâches
 init_db_task >> scrape_task
-
-
-#NOTE:Imported the scrape_techcrunch function from main.py
-#NOTE Set up a basic DAG with default arguments
-#NOTE Created a PythonOperator task that calls the scrape_techcrunch function
-#NOTE Added the ability to specify the output file path
-#TODO:Finir la compréension du code de airflow
